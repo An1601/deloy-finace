@@ -109,6 +109,7 @@ export type LoanItemType = {
     bank: {
       bank_id: number;
       name: string;
+      thumbnail: string;
     };
   };
   loan_business_list: {};
