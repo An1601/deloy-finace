@@ -96,6 +96,7 @@ export type LoanItemType = {
   loan_id: number;
   survey_answer_id: number;
   state?: number;
+  state_submit: number;
   loans: {
     id: number;
     bank_id: number;
