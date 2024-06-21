@@ -80,11 +80,11 @@ const BookingModal = ({
     }
     return true;
   };
+  const formatInitDate = (dateTimeString: string) => {
+    const [datePart, timePart] = dateTimeString.split(" ");
+    const formattedDate = `${datePart}T${timePart}.000000Z`;
 
-  const formatDate = (dateTimeString: string) => {
-    const dateObject = new Date(dateTimeString.replace(" ", "T") + "Z");
-    const isoString = dateObject.toISOString();
-    return isoString;
+    return formattedDate;
   };
 
   const handleMeetingTime = async () => {
@@ -180,9 +180,12 @@ const BookingModal = ({
   useEffect(() => {
     if (meetingData) {
       setNote(meetingData.meeting?.note);
-      setDate(new Date(meetingData.meeting.start_time));
+      choosenDate = new Date(meetingData.meeting.date_meeting);
+      setDate(new Date(meetingData.meeting.date_meeting));
+      setStartTime(formatInitDate(meetingData.meeting.start_time));
     }
   }, [meetingData]);
+
   if (isLoading) return <Loader />;
   return (
     <div
@@ -208,15 +211,15 @@ const BookingModal = ({
               <div className="col-span-2 md:col-span-1">
                 <Calendar
                   onChange={(date) => {
-                    setDate(date);
                     choosenDate = date;
+                    setDate(choosenDate);
                   }}
                   tileDisabled={({ date }) => {
                     const current = new Date();
                     current.setHours(0, 0, 0, 0);
                     return date < current;
                   }}
-                  value={meetingData?.meeting.start_time}
+                  value={date}
                 />
               </div>
               <div className="col-span-2 md:col-span-1 flex flex-col gap-6 items-center">
@@ -230,16 +233,31 @@ const BookingModal = ({
                         <button
                           onClick={() => {
                             if (
-                              availableTime.status &&
-                              compareTime(availableTime?.start_time)
+                              (availableTime.status &&
+                                compareTime(availableTime?.start_time)) ||
+                              (meetingData &&
+                                availableTime.start_time ===
+                                  formatInitDate(
+                                    meetingData?.meeting.start_time,
+                                  ))
                             )
                               setStartTime(availableTime.start_time);
                           }}
                           key={availableTime.id}
-                          className={`${availableTime.start_time === startTime || (meetingData?.meeting.start_time && formatDate(meetingData?.meeting.start_time).slice(0, 22)) === availableTime.start_time.slice(0, 22) ? "bg-light_finance-sub_second" : "bg-white"} col-span-3 xxs:col-span-2 flex items-center py-2 px-3 border-[1px] border-light_finance-textbody rounded-lg`}
+                          className={`${availableTime.start_time === startTime ? "bg-light_finance-sub_second" : "bg-white"} col-span-3 xxs:col-span-2 flex items-center py-2 px-3 border-[1px] border-light_finance-textbody rounded-lg`}
                         >
                           <i
-                            className={`fa-solid fa-circle fa-2xs ${availableTime.status && compareTime(availableTime.start_time) ? "text-light_finance-primary" : "text-light_finance-red"}`}
+                            className={`fa-solid fa-circle fa-2xs ${
+                              (availableTime.status &&
+                                compareTime(availableTime?.start_time)) ||
+                              (meetingData &&
+                                availableTime.start_time ===
+                                  formatInitDate(
+                                    meetingData?.meeting.start_time,
+                                  ))
+                                ? "text-light_finance-primary"
+                                : "text-light_finance-red"
+                            }`}
                           ></i>
                           <div className="ml-2 text-md font-normal whitespace-nowrap">
                             {formatISOStringToTime(availableTime.start_time)}
