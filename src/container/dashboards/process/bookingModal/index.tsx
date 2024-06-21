@@ -50,6 +50,7 @@ const BookingModal = ({
     });
     return formattedTime;
   };
+
   const formatValueToISOString = (date: Value): string | undefined => {
     let newDate = new Date();
     if (date instanceof Date) {
@@ -67,6 +68,7 @@ const BookingModal = ({
     const utcDate = newDate.toISOString();
     return utcDate.split("T")[0];
   };
+
   const compareTime = (inputTimeString: string) => {
     if (date) {
       const current = new Date();
@@ -80,10 +82,10 @@ const BookingModal = ({
     }
     return true;
   };
+
   const formatInitDate = (dateTimeString: string) => {
     const [datePart, timePart] = dateTimeString.split(" ");
     const formattedDate = `${datePart}T${timePart}.000000Z`;
-
     return formattedDate;
   };
 
@@ -110,6 +112,7 @@ const BookingModal = ({
       toast.error(message);
     }
   };
+
   const handleBookMeeting = async () => {
     if (startTime) {
       if (offerId) {
@@ -136,6 +139,7 @@ const BookingModal = ({
       }
     } else toast.info(t("process.bookMeeting.timeAlert"));
   };
+
   const handleUpdateMeeting = async () => {
     dispatch(setLoadingTrue());
     try {
@@ -149,26 +153,37 @@ const BookingModal = ({
         },
       );
       if (response.status === 200) {
-        toast.success("Updated meeting successfully!");
+        toast.success(t("process.bookMeeting.updateSucess"));
         setTimeout(() => {
           window.location.reload();
         }, 2000);
       }
     } catch (error) {
-      toast.error("Failed to update meeting!");
+      toast.error(t("process.bookMeeting.failedUpdate"));
     } finally {
       dispatch(setLoadingFalse());
     }
   };
+
   const handleSubmit = () => {
     if (meetingData) {
-      handleUpdateMeeting();
-    } else handleBookMeeting();
+      if (
+        startTime === formatInitDate(meetingData.meeting.start_time) &&
+        note === meetingData.meeting.note
+      ) {
+        toast.info(t("process.bookMeeting.existed"));
+      } else {
+        handleUpdateMeeting();
+      }
+    } else {
+      handleBookMeeting();
+    }
   };
 
   useEffect(() => {
     handleMeetingTime();
   }, [date]);
+
   useEffect(() => {
     let timerId = setTimeout(function tick() {
       handleMeetingTime();
@@ -177,6 +192,7 @@ const BookingModal = ({
     }, 10000);
     return () => clearTimeout(timerId);
   }, []);
+
   useEffect(() => {
     if (meetingData) {
       setNote(meetingData.meeting?.note);
