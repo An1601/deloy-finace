@@ -30,7 +30,7 @@ const BookingModal = ({
   reFetchMeeeting,
 }: {
   meetingData?: ConsultingMeeting | undefined;
-  reFetchMeeeting: () => Promise<void>;
+  reFetchMeeeting?: any;
 }) => {
   const [date, setDate] = useState<Value>(new Date());
   const [startTime, setStartTime] = useState("");
