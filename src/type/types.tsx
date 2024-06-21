@@ -191,6 +191,7 @@ export type Meeting = {
 
 export type Loans = {
   interest_rate_type: number;
+  name: string;
 };
 
 export type SurveyAnswers = {
