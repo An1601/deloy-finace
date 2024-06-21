@@ -287,6 +287,7 @@ const BookingModal = ({
             <PrimarySubmitBtn
               name={t("process.book")}
               handleSubmit={handleSubmit}
+              dataHsOverlay="#booking-modal"
             />
           </div>
         </div>
