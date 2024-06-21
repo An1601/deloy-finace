@@ -125,6 +125,7 @@ const BookingModal = ({
             note: note,
           });
           if (response.status === 200) {
+            document.body.style.overflow = "";
             navigate(`/meeting/${response.data?.data?.loan_business_list_id}`);
           }
         } catch (error) {
