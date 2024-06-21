@@ -80,6 +80,13 @@ const BookingModal = ({
     }
     return true;
   };
+
+  const formatDate = (dateTimeString: string) => {
+    const dateObject = new Date(dateTimeString.replace(" ", "T") + "Z");
+    const isoString = dateObject.toISOString();
+    return isoString;
+  };
+
   const handleMeetingTime = async () => {
     try {
       const response = await api.post(`/check-time-meeting`, {
@@ -129,7 +136,6 @@ const BookingModal = ({
       }
     } else toast.info(t("process.bookMeeting.timeAlert"));
   };
-  console.log(meetingData?.meeting.id);
   const handleUpdateMeeting = async () => {
     dispatch(setLoadingTrue());
     try {
@@ -171,8 +177,12 @@ const BookingModal = ({
     }, 10000);
     return () => clearTimeout(timerId);
   }, []);
-  console.log(meetingData?.meeting.id);
-
+  useEffect(() => {
+    if (meetingData) {
+      setNote(meetingData.meeting?.note);
+      setDate(new Date(meetingData.meeting.start_time));
+    }
+  }, [meetingData]);
   if (isLoading) return <Loader />;
   return (
     <div
@@ -206,6 +216,7 @@ const BookingModal = ({
                     current.setHours(0, 0, 0, 0);
                     return date < current;
                   }}
+                  value={meetingData?.meeting.start_time}
                 />
               </div>
               <div className="col-span-2 md:col-span-1 flex flex-col gap-6 items-center">
@@ -225,7 +236,7 @@ const BookingModal = ({
                               setStartTime(availableTime.start_time);
                           }}
                           key={availableTime.id}
-                          className={`${availableTime.start_time === startTime ? "bg-light_finance-sub_second" : "bg-white"} col-span-3 xxs:col-span-2 flex items-center py-2 px-3 border-[1px] border-light_finance-textbody rounded-lg`}
+                          className={`${availableTime.start_time === startTime || (meetingData?.meeting.start_time && formatDate(meetingData?.meeting.start_time).slice(0, 22)) === availableTime.start_time.slice(0, 22) ? "bg-light_finance-sub_second" : "bg-white"} col-span-3 xxs:col-span-2 flex items-center py-2 px-3 border-[1px] border-light_finance-textbody rounded-lg`}
                         >
                           <i
                             className={`fa-solid fa-circle fa-2xs ${availableTime.status && compareTime(availableTime.start_time) ? "text-light_finance-primary" : "text-light_finance-red"}`}

@@ -31,10 +31,10 @@ import UserProcess from "@pages/userProcess.tsx";
 import LoanAppSubmit from "@container/dashboards/process/loan-app-submit";
 import Projects from "@container/dashboards/project/index.tsx";
 import LoanSubmitConfirm from "@container/dashboards/process/loan-app-submit/LoanSubmitConfirm.tsx";
-import RecordIndex from "@container/dashboards/Record/index.tsx";
-import NotificationIndex from "@container/dashboards/Notification/index.tsx";
-import SearchMobile from "@container/dashboards/search/index.tsx";
-import FAQ from "@container/dashboards/FAQ/index.tsx";
+import RecordIndex from "@container/dashboards/Record/Index.tsx";
+import NotificationIndex from "@container/dashboards/Notification/Index.tsx";
+import SearchMobile from "@container/dashboards/search/Index.tsx";
+import FAQ from "@container/dashboards/FAQ/Index.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.Fragment>
