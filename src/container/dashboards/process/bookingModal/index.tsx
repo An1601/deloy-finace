@@ -27,8 +27,10 @@ interface MeetingTimeType {
 let choosenDate: Value = new Date();
 const BookingModal = ({
   meetingData,
+  reFetchMeeeting,
 }: {
   meetingData?: ConsultingMeeting | undefined;
+  reFetchMeeeting: () => Promise<void>;
 }) => {
   const [date, setDate] = useState<Value>(new Date());
   const [startTime, setStartTime] = useState("");
@@ -155,9 +157,8 @@ const BookingModal = ({
       );
       if (response.status === 200) {
         toast.success(t("process.bookMeeting.updateSucess"));
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
+        document.body.style.overflow = "";
+        reFetchMeeeting();
       }
     } catch (error) {
       toast.error(t("process.bookMeeting.failedUpdate"));
