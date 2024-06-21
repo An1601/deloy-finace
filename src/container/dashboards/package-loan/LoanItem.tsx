@@ -24,6 +24,7 @@ const LoanItem: React.FC<{ loanItem: LoanItemType | RecordItemType }> = ({
       return `${roundPrice}${price > 1000000 ? "M" : "K"}`;
     }
   };
+  console.log(loanItem);
 
   return (
     <div className="p-4 bg-white rounded-xl w-full flex flex-col md:flex-row md:justify-between gap-3">
@@ -31,9 +32,9 @@ const LoanItem: React.FC<{ loanItem: LoanItemType | RecordItemType }> = ({
         <img
           src={
             isLoanItemType
-              ? loanItem?.loans?.thumbnail &&
+              ? loanItem?.loans?.bank.thumbnail ??
                 "https://i.pinimg.com/736x/2a/2c/1d/2a2c1d90075390b22e7e6060254dab0d.jpg"
-              : loanItem?.loan_offer?.loans?.user?.bank?.thumbnail &&
+              : loanItem?.loan_offer?.loans?.user?.bank?.thumbnail ??
                 "https://i.pinimg.com/736x/2a/2c/1d/2a2c1d90075390b22e7e6060254dab0d.jpg"
           }
           className="h-[44px] min-w-[44px] xl:h-[4.5rem] xl:min-w-[4.5rem] rounded-full overflow-hidden"
